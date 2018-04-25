@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-sacle=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+	<title>模拟用户行为</title>
+	<script src="zepto.js"></script>
+	<script src="actions.min.js"></script>
+	<style>
+	*{margin:0;padding:0;}
+	html{font-size:90px;}
+	body{font:14px Arial,Helvetica,sans-serif;text-align:center;}
+	input, button, textarea{border:none;}
+
+	.se-page-hd {
+	    background-color: #f8f8f8;
+	    position: static;
+	}
+	.se-head-logo {
+	    height: 162px;
+	}
+	.se-head-logo .se-logo {
+	    display: inline-block;
+	    height: 46px;
+	    margin: 8px 0;
+	    width: 163px; 
+	}
+	.se-head-logo .se-logo.se-logo-festival img {
+	    max-height: 46px;
+	    max-width: 163px;
+	    padding-top: 0;
+	}
+	#index-form {
+	    background: #fff none repeat scroll 0 0;
+	    border: 1px solid #363636;
+	    border-radius: 0;
+	    box-shadow: initial;
+	    height: 44px;
+	    margin: 0 16px;
+	}
+	#index-form .con-wrap {
+	    display: -moz-box;
+	    display: -webkit-box;
+	    width: 100%;
+	}
+	.se-input {
+	    border-radius: 0;
+	    font-family: Arial,Helvetica,sans-serif;
+	    height: 44px;
+	    line-height: 28px;
+	    margin: 0;
+	    overflow: hidden;
+	    padding: 7px 42px 7px 6px;
+	    resize: none;
+	}
+	.se-input, .se-encode {
+		-webkit-appearance: none;
+	    -moz-box-flex: 1;
+	    -webkit-box-flex: 1;
+	    display: block;
+	    font-size: 18px;
+	}
+	.searchbox-exp .se-inner {
+	    width: 81px;
+	}
+	.se-inner {
+	    position: relative;
+	    width: 82px;
+	}
+	#index-cross {
+	    background: rgba(0, 0, 0, 0) url("") no-repeat scroll center center / 16px auto;
+	    height: 42px;
+	    left: -35px;
+	    position: absolute;
+	    top: 0;
+	    width: 35px;
+	    z-index: 2;
+	}
+	#index-bn {
+	    -moz-border-bottom-colors: none;
+	    -moz-border-left-colors: none;
+	    -moz-border-right-colors: none;
+	    -moz-border-top-colors: none;
+	    -webkit-border-bottom-colors: none;
+	    -webkit-border-left-colors: none;
+	    -webkit-border-right-colors: none;
+	    -webkit-border-top-colors: none;
+	    background: #fff none repeat scroll 0 0;
+	    border-bottom-right-radius: initial;
+	    border-color: -moz-use-text-color -moz-use-text-color -moz-use-text-color #e8e8e8;
+	    border-color: -webkit-use-text-color -webkit-use-text-color -webkit-use-text-color #e8e8e8;
+	    border-image: none;
+	    border-style: none none none solid;
+	    border-top-right-radius: initial;
+	    border-width: 0 0 0 1px;
+	    box-sizing: inherit;
+	    color: #38f;
+	    font-size: 16px;
+	    font-weight: 700;
+	    height: 44px;
+	    letter-spacing: -1px;
+	    line-height: 46px;
+	    padding: 0 10px;
+	    position: absolute;
+	    right: 0;
+	    text-shadow: none;
+	    top: 0;
+	    white-space: nowrap;
+	    width: 60px;
+	}
+	#index-bn {
+	    background: #38f none repeat scroll 0 0;
+	    border-bottom: 1px solid #38f;
+	    border-bottom-right-radius: 2px;
+	    border-top: 1px solid #38f;
+	    border-top-right-radius: 2px;
+	    box-sizing: inherit;
+	    color: #fff;
+	    font-size: 16px;
+	    font-weight: 700;
+	    height: 44px;
+	    letter-spacing: -1px;
+	    line-height: 44px;
+	    position: absolute;
+	    right: -1px;
+	    text-shadow: none;
+	    top: -1px;
+	    white-space: nowrap;
+	    width: 82px;
+	}
+
+	
+	.search-page {
+	    position: relative;
+	}
+	.se-page-bd {
+		position: relative;
+	}
+	.se-page-bd {
+	    background-color: #f1f1f1;
+	    overflow: hidden;
+	}
+	.result {
+	    padding: 0;
+	    text-align: left;
+	}
+	.c-result {
+	    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+	    border: 0 none;
+	    margin: 0;
+	    padding: 0;
+	}
+	.c-container {
+	    background-color: #fff;
+	    border: 0 none;
+	    color: #555;
+	    font: 14px/24px Arial,Helvetica,sans-serif;
+	    margin: 0.08rem 0;
+	    padding: 0.1rem 0.17rem 0.15rem;
+	    width: auto;
+	    word-wrap: break-word;
+	}
+	.c-blocka {
+	    display: block;
+	}
+	a .c-title, a.c-title {
+	    color: #000;
+	    font: 18px/28px Arial,Helvetica,sans-serif;
+	}
+	.c-gap-top-small {
+	    margin-top: 0.05rem;
+	}
+	em {
+	    color: #d00;
+	    font-style: normal;
+	    text-decoration: none;
+	}
+	.new-pagenav {
+	    background: #fff none repeat scroll 0 0;
+	    height: 52px;
+	    line-height: 52px;
+	    margin: 0.1rem 0;
+	    position: relative;
+	    font-size:0.1rem;
+	}
+
+	.new-nextpage-only {
+	    color: #333 !important;
+	    display: block;
+	    height: 100%;
+	    position: absolute;
+	    width: 100%;
+	    z-index: 1;
+	}
+
+	.forNoPrefetch {
+	    letter-spacing: 1px;
+	    text-align: center;
+	    width: 100%;
+	    font-size: 13px;
+	}
+
+	.new-pagenav .icon-logo {
+	    color: #9b9fa4;
+	    font-size: 18px;
+	}
+
+	.new-pagenav .c-icon {
+	    color: #797979;
+	    font-size: 13px;
+	}
+	.icon-nextpage {
+	    position: absolute;
+	    right: 25%;
+	}
+	.c-icon {
+	    font-family: cicons !important;
+	    font-style: normal;
+	}
+
+
+	.test-info{width:100%;text-align:left;font-size:0.15rem;padding:10px;background:pink;opacity:0.9;position:fixed;top:0;left:0;z-index:99999;}
+	.test-info ul{padding:0;margin:0;}
+	.test-info ul li{list-style-type:none;}
+	.test-info input[type="button"]{padding:5px 10px;margin:5px 0;background:green;color:#fff;}
+
+	.test-block{width:20px;height:20px;background:#000;position:fixed;z-index:99998;display:none;opacity:0.4;border-radius:10px;}
+	</style>
+
+</head>
+<body>
+	<div class="test-block" id="test-block"></div>
+	
+	<div class="test-info">
+		<ul class="setting">
+			<li>搜索关键词: <input id="keywords" type="text" value="百度fast排名2018"></li>
+			<li>触摸步长: <input id="step" type="text" value="10"></li>
+			<li>触摸延迟: <input id="timer" type="text" value="10"></li>
+			<li>滚动到指定网址(点击): <input id="url" type="text" value="m.18haitao.com"></li>
+			<li>是否点击下一页: <input id="isnextpage" type="checkbox"></li>
+			<li><input id="btn-test" type="button" value="开始模拟"></li>
+		</ul>
+	</div>
+
+	<div id="page-hd" class="se-page-hd">
+		<div class="se-page-hd-content">
+			<div class="se-head-logo">
+				<a class="se-logo se-logo-festival" href="javascript:;">
+					<img width="163px" height="46px" src="">
+				</a>
+			</div>
+			<div class="searchboxtop searchboxtop-wrap">
+				<form id="index-form" class="se-form" autocomplete="off" method="get" action="/s" data-formposition="i">
+					<div class="con-wrap">
+						<input id="index-kw" class="se-input" type="search" data-placeholder="" name="word" maxlength="64" autocorrect="off" autocomplete="off" data-sug="1">
+						<div class="se-inner">
+							<div id="index-cross" class="cross"></div>
+							<button id="index-bn" class="se-bn" type="button" onclick="javascript:alert('提交')">百度一下</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="page" class="search-page">
+		<div id="page-bd" class="se-page-bd">
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.10haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.10haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.10haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.11haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.11haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.11haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.12haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.12haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.12haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.13haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.13haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.13haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.14haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.14haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.14haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.15haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.15haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.15haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.16haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.16haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.16haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.17haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.17haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.17haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.18haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.18haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.18haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.19haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.19haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.19haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.20haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.20haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.20haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.21haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.21haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.21haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.22haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.22haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.22haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.23haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.23haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.23haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.24haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.24haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.24haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.25haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.25haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.25haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.26haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.26haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.26haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.27haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.27haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.27haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.28haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.28haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.28haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="result c-result" srcid="www_normal"srcid="www_normal" new_srcid="1599" order="6" tpl="www_normal" data-log="{'fm':'','ensrcid':'www_normal','order':'6','mu':'https://m.29haitao.com/bbs/thread-1538727-1-1.html'}">
+				<div class="c-container">
+					<a href="javascript:alert('m.29haitao.com')" class="c-blocka">
+						<h3 class="c-title c-gap-top-small wa-www-normal-title">日本<em>美瞳</em>试单成功啦~终于可以带上舒服又安全的<em>美瞳</em>啦!....</h3>
+					</a>
+					<div class="c-row c-abstract c-gap-top-small">
+						<div class="c-span12">
+							<a href="javascript:;" class="c-blocka">
+								<p class="c-line-clamp3 c-color">一直很心水日本MM的<em>美瞳</em>~~终有一日在55看到了Charm-color可以购买!!于是马上研究下单试卡~~紧接着就是收...</p>
+							</a>
+						</div>
+					</div>
+					<div class="c-showurl c-line-clamp1">
+						<a href="javascript:;" class="" >
+							<span class="c-showurl">https://m.29haitao.com</span>
+							<span class="c-showurl">&nbsp;&rsaquo;&nbsp;bbs&nbsp;&rsaquo;&nbsp;thread-1538727-1-1</span>
+						</a>
+						<span class="c-gray c-gap-left">2016年5月6日</span>
+					</div>
+				</div>
+			</div>
+
+			<div id="page-controller" class="se-page-controller">
+				<div data-server-rendered="true" atom-root-5ad025b33b732="" class="new-pagenav c-flexbox" data-a-3c9f591e>
+					<a href="javascript:alert('下一页')" class="new-nextpage-only" data-a-3c9f591e></a>
+					<p class="forNoPrefetch" data-a-3c9f591e>
+						<i class="c-icon c-gap-right icon-logo" data-a-3c9f591e></i>
+						下一页
+						<i class="c-icon icon-nextpage" data-a-3c9f591e></i>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(document).on("touchstart", function(e){
+			console.log(e)
+		})
+
+		$(document).on("touchmove", function(e){
+			console.log(e)
+		})
+
+		$(document).on("touchend", function(e){
+			console.log(e)
+		})
+
+		$(document).on("click", function(e){
+			console.log(e)
+		})
+
+		$('#index-kw').on("focus", function(e){
+			console.log(e)
+		})
+
+		$('#index-kw').on("blur", function(e){
+			console.log(e)
+		})
+
+		$('#index-kw').on("keydown", function(e){
+			console.log(e)
+		})
+
+		$('#index-kw').on("keypress", function(e){
+			console.log(e)
+		})
+
+		$('#index-kw').on("keyup", function(e){
+			console.log(e)
+		})
+
+		$('#index-kw').on("input", function(e){
+			console.log(e)
+		})
+
+		
+
+		$('#btn-test').on('click',function(){
+
+			var keywords = $('#keywords').val();
+			var container = $('.c-container');
+			var url = $('#url').val();
+			var c_blocka = null;
+			var nextpage = $('.new-nextpage-only');
+			var isnextpage = $('#isnextpage').is(':checked');
+			var index_kw = $('#index-kw');
+			var step = $('#step').val();
+			var timer = $('#timer').val();
+			var target = [];
+			var c_blocka_h, nextpage_h;
+
+			index_kw.val('');
+			$(this).attr('disabled',true);
+
+			if(url){
+				$('.c-container').each(function(){
+					var t = $(this);
+					var showurl = t.find('span.c-showurl');
+					if(showurl.text().indexOf(url)>=0){
+						c_blocka = t.find('a.c-blocka');
+					}	
+				});
+			}
+
+			if(c_blocka)
+				target.push(c_blocka_h = c_blocka[0].getBoundingClientRect().top);
+
+			if(isnextpage)
+				target.push(nextpage_h = nextpage[0].getBoundingClientRect().top);		
+
+			target.length && target.push(10);
+
+
+			var actions1 = Actions.tap('index-kw',{
+				onError:function(msg){
+					console.log(msg);
+				},
+				onReady:function(x,y){
+					$('#test-block').show().css({'left':x,'top':y});
+				},
+				onFinish:function(x,y){
+					$('#test-block').hide()
+				}
+			});
+
+			var actions2 = Actions.input('index-kw',{
+				keywords:keywords,
+				onError:function(msg){
+					console.log(msg);
+				},
+				onReady:function(){
+					
+				},
+				onChange:function(keyword){
+					$('#index-kw')[0].value+=keyword;
+				},
+				onFinish:function(){
+					
+				}
+			});
+
+			var actions3 = Actions.tap('index-bn',{
+				onError:function(msg){
+					console.log(msg);
+				},
+				onReady:function(x,y){
+					$('#test-block').show().css({'left':x,'top':y});
+				},
+				onFinish:function(x,y){
+					$('#test-block').hide();
+				}
+			});
+
+			var actions4 = Actions.scroll({
+				target:target,
+				timer:timer || 10,
+				step:step || 10,
+				onError:function(msg){
+					console.log(msg);
+				},
+				onReady:function(){
+					
+				},
+				onBefore:function(x,y){
+					$('#test-block').show();
+				},
+				onMoving:function(x,y){
+					$('#test-block').css({'left':x,'top':y});
+				},
+				onAfter:function(x,y){
+					$('#test-block').hide();
+				},
+				onChange:function(y){
+					if(y == c_blocka_h){
+						Actions.tap(c_blocka[0],{
+							onError:function(msg){
+								console.log(msg);
+							},
+							onReady:function(x,y){
+								$('#test-block').show().css({'left':x,'top':y});
+							},
+							onFinish:function(x,y){
+								$('#test-block').hide()
+							}
+						}).set();
+					}else if(y == nextpage_h){
+						Actions.tap(nextpage[0],{
+							onError:function(msg){
+								console.log(msg);
+							},
+							onReady:function(x,y){
+								$('#test-block').show().css({'left':x,'top':y});
+							},
+							onFinish:function(x,y){
+								$('#test-block').hide()
+							}
+						}).set();
+					}else if(y == 10){
+						alert(y)
+					}
+				},
+				onFinish:function(){
+					
+				}
+			});
+
+			var b = actions1.set();
+			b.then(function(data){
+				return actions2.set();
+			})
+			.then(function(data){
+				return actions3.set();
+			})
+			.then(function(data){
+				return actions4.set();
+			})
+			.then(function(data){
+				alert('模拟完毕');
+				$('#btn-test').removeAttr('disabled');
+			});
+
+		});
+		
+
+	</script>
+</body>
+</html>
